@@ -3,17 +3,17 @@ const POINT_COUNT = 3;
 
 const createTripInfo = () => {
   return (
-  `<section class="trip-main__trip-info  trip-info">
-    <div class="trip-info__main">
-      <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
+    `<section class="trip-main__trip-info  trip-info">
+      <div class="trip-info__main">
+        <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
 
-      <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
-    </div>
+        <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
+      </div>
 
-    <p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
-    </p>
-  </section>`
+      <p class="trip-info__cost">
+        Total: &euro;&nbsp;<span class="trip-info__cost-value">1230</span>
+      </p>
+    </section>`
   );
 };
 
@@ -266,7 +266,7 @@ const createEventEdit = () => {
 };
 
 const createTripDays = () => {
-  return(
+  return (
     `<ul class="trip-days">
     </ul>
     `
@@ -274,7 +274,7 @@ const createTripDays = () => {
 };
 
 const createTripDay = () => {
-  return(
+  return (
     `<li class="trip-days__item  day">
         <div class="day__info">
           <span class="day__counter">1</span>
@@ -326,32 +326,30 @@ const createPoint = () => {
       </div>
     </li>`
   );
-}
+};
 
 const renderElement = (container, template, place) => container.insertAdjacentHTML(place, template);
 
-const tripMainContainer = document.querySelector('.trip-main');
-const tripControls = tripMainContainer.querySelector('.trip-controls');
+const tripMainContainer = document.querySelector(`.trip-main`);
+const tripControls = tripMainContainer.querySelector(`.trip-controls`);
 
 renderElement(tripMainContainer, createTripInfo(), `afterbegin`);
 renderElement(tripControls, createTripTabs(), `afterbegin`);
 renderElement(tripControls, createTripFilters(), `beforeend`);
 
-const pageMain = document.querySelector('.page-main');
-const tripEvents = pageMain.querySelector('.trip-events');
+const pageMain = document.querySelector(`.page-main`);
+const tripEvents = pageMain.querySelector(`.trip-events`);
 
 renderElement(tripEvents, createSort(), `afterbegin`);
 renderElement(tripEvents, createEventEdit(), `beforeend`);
 renderElement(tripEvents, createTripDays(), `beforeend`);
 
-const tripDays = tripEvents.querySelector('.trip-days');
+const tripDays = tripEvents.querySelector(`.trip-days`);
 
 renderElement(tripDays, createTripDay(), `beforeend`);
 
-const tripEventsList = tripDays.querySelector('.trip-events__list');
+const tripEventsList = tripDays.querySelector(`.trip-events__list`);
 
-for(let i = 0; i < POINT_COUNT; i++) {
+for (let i = 0; i < POINT_COUNT; i++) {
   renderElement(tripEventsList, createPoint(), `beforeend`);
 }
-
-
