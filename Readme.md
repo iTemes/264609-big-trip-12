@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
 * Студент: [Артем Аксентенко](https://up.htmlacademy.ru/ecmascript/12/user/264609).
-* Наставник: `Неизвестно`.
+* Наставник: `Keks`.
 
 ---
 
