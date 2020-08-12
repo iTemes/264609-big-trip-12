@@ -7,8 +7,12 @@ import {createTripDays} from "./view/tripList.js";
 import {createTripDay} from "./view/tripDay.js";
 import {createPoint} from "./view/tripPoint.js";
 
+import {generatePoint} from "./mock/point.js";
+
 const POINT_COUNT = 3;
 
+const points = new Array(POINT_COUNT).fill().map(generatePoint);
+const editPoint = new Array(1).fill().map(generatePoint);
 
 const renderElement = (container, template, place) => container.insertAdjacentHTML(place, template);
 
@@ -23,7 +27,7 @@ const pageMain = document.querySelector(`.page-main`);
 const tripEvents = pageMain.querySelector(`.trip-events`);
 
 renderElement(tripEvents, createSort(), `afterbegin`);
-renderElement(tripEvents, createEventEdit(), `beforeend`);
+renderElement(tripEvents, createEventEdit(editPoint[0]), `beforeend`);
 renderElement(tripEvents, createTripDays(), `beforeend`);
 
 const tripDays = tripEvents.querySelector(`.trip-days`);
@@ -33,5 +37,6 @@ renderElement(tripDays, createTripDay(), `beforeend`);
 const tripEventsList = tripDays.querySelector(`.trip-events__list`);
 
 for (let i = 0; i < POINT_COUNT; i++) {
-  renderElement(tripEventsList, createPoint(), `beforeend`);
+  renderElement(tripEventsList, createPoint(points[i]), `beforeend`);
 }
+
