@@ -1,4 +1,4 @@
-import {castTimeFormat, formatTime} from "../utils";
+import {createElement, castTimeFormat, formatTime} from "../utils";
 
 const getDuration = (start, end) => {
   const interval = new Date(end - start);
@@ -23,7 +23,7 @@ const createOffersTemplate = (offers) => offers
   })
   .join(``);
 
-export const createPoint = (point) => {
+const createPointTemplate = (point) => {
   const {destination, type, dueDate, price, offers} = point;
   const duration = getDuration(dueDate.start, dueDate.end);
   return (
@@ -59,3 +59,27 @@ export const createPoint = (point) => {
     </li>`
   );
 };
+
+export default class Point {
+  constructor(point) {
+    this._point = point;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPointTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

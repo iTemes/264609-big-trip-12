@@ -1,4 +1,4 @@
-import {getRandomInteger, createElement} from "../utils";
+import {getRandomInteger} from "../utils";
 
 const shuffle = (array) => {
   for (let i = array.length - 1; i > 0; i--) {

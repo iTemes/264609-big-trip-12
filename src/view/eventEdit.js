@@ -1,4 +1,4 @@
-import {formatDate, formatTime} from "../utils.js";
+import {createElement, formatDate, formatTime} from "../utils.js";
 import {offerNames, offersStructure} from "../mock/point.js";
 
 const createPhotosTemplate = (photos) => photos
@@ -35,7 +35,7 @@ const createOfferTemplate = (offer, isChecked) => {
   );
 };
 
-export const createEventEdit = (point) => {
+const createEventEditTemplate = (point) => {
   const {description, photos, type, destination, destinationList, price, offers, dueDate} = point;
 
   const startDate = `${formatDate(dueDate.start)} ${formatTime(dueDate.start)}`;
@@ -171,3 +171,27 @@ export const createEventEdit = (point) => {
     </form>`
   );
 };
+
+export default class EventEdit {
+  constructor(point) {
+    this._point = point;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEventEditTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
