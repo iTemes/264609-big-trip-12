@@ -43,14 +43,14 @@ const tripControls = tripMainContainer.querySelector(`.trip-controls`);
 
 render(tripMainContainer, new TripInfoView().getElement(), RenderPosition.AFTERBEGIN);
 render(tripControls, new TripTabsVew().getElement(), RenderPosition.BEFOREEND);
-render(tripControls, new TripFiltersView().getElement(),  RenderPosition.BEFOREEND);
+render(tripControls, new TripFiltersView().getElement(), RenderPosition.BEFOREEND);
 
 const pageMain = document.querySelector(`.page-main`);
 const tripEvents = pageMain.querySelector(`.trip-events`);
 render(tripEvents, new SortView().getElement(), RenderPosition.AFTERBEGIN);
 // render(tripEvents, new EventEditView(points[0]).getElement(), RenderPosition.BEFOREEND);
 
-const tripDays =  new TripListView().getElement();
+const tripDays = new TripListView().getElement();
 render(tripEvents, tripDays, RenderPosition.BEFOREEND);
 render(tripDays, new TripDayView().getElement(), RenderPosition.BEFOREEND);
 
