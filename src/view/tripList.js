@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import AbstractView from "./abstract.js";
 
 const createTripDaysTemplate = () => {
   return (
@@ -8,24 +8,8 @@ const createTripDaysTemplate = () => {
   );
 };
 
-export default class TripList {
-  constructor() {
-    this._element = null;
-  }
-
+export default class TripList extends AbstractView {
   getTemplate() {
     return createTripDaysTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
