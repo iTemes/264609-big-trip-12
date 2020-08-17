@@ -3,8 +3,8 @@ import {createElement} from "../utils.js";
 const createNoPointTemplate = () => {
   return `<p class="trip-events__msg">
     Click New Event to create your first point
-  </p>`
-}
+  </p>`;
+};
 
 export default class NoPoint {
   constructor() {

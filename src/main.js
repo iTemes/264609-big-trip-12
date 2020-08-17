@@ -6,7 +6,7 @@ import EventEditView from "./view/eventEdit.js";
 import TripListView from "./view/tripList.js";
 import TripDayView from "./view/tripDay.js";
 import PointView from "./view/tripPoint.js";
-import NoPointView from "./view/no-point.js"
+import NoPointView from "./view/no-point.js";
 import {generatePoint} from "./mock/point.js";
 
 import {render, RenderPosition} from "./utils.js";
@@ -33,7 +33,7 @@ const renderPoint = (tripEventsList, point) => {
       replaceFormToPoint();
       document.removeEventListener(`keydown`, onEscKeyDown);
     }
-  }
+  };
 
   pointComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
     replacePointToForm();
