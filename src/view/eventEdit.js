@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {formatDate, formatTime} from "../utils.js";
+import {formatDate, formatTime} from "../utils/point.js";
 import {offerNames, offersStructure} from "../mock/point.js";
 
 const createPhotosTemplate = (photos) => photos

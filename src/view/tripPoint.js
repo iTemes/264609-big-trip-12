@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {castTimeFormat, formatTime} from "../utils";
+import {castTimeFormat, formatTime} from "../utils/point.js";
 
 const getDuration = (start, end) => {
   const interval = new Date(end - start);

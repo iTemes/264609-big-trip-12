@@ -8,9 +8,7 @@ const createTripDayTemplate = () => {
           <time class="day__date" datetime="2019-03-18">MAR 18</time>
         </div>
 
-        <ul class="trip-events__list">
 
-        </ul>
       </li>
     `
   );

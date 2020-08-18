@@ -1,4 +1,4 @@
-import {getRandomInteger, shuffle} from "../utils";
+import {getRandomInteger, shuffle} from "../utils/common.js";
 
 const types = [
   `Taxi`,
@@ -125,7 +125,6 @@ const getDate = (date) => {
     end: new Date(date.setMinutes(date.getMinutes() + getRandomInteger(TimePeriodInMinute.MIN, TimePeriodInMinute.MAX))),
   };
 };
-
 
 const getPhotos = () => {
   return new Array(getRandomInteger(4, 7))

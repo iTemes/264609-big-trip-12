@@ -1,8 +1,9 @@
 import AbstractView from "./abstract.js";
 
-const createTripDaysTemplate = () => {
+const createTripListTemplate = () => {
   return (
-    `<ul class="trip-days">
+    `<ul class="trip-events__list">
+
     </ul>
     `
   );
@@ -10,6 +11,6 @@ const createTripDaysTemplate = () => {
 
 export default class TripList extends AbstractView {
   getTemplate() {
-    return createTripDaysTemplate();
+    return createTripListTemplate();
   }
 }
