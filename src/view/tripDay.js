@@ -14,7 +14,7 @@ const createTripDayTemplate = () => {
   );
 };
 
-export default class TripDay extends AbstractView{
+export default class TripDay extends AbstractView {
   getTemplate() {
     return createTripDayTemplate();
   }

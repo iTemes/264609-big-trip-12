@@ -24,7 +24,7 @@ const createTripFiltersTemplate = () => {
   );
 };
 
-export default class TripFilters extends AbstractView{
+export default class TripFilters extends AbstractView {
   getTemplate() {
     return createTripFiltersTemplate();
   }

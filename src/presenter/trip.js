@@ -6,7 +6,7 @@ import TripDayView from "../view/tripDay.js";
 import TripDaysView from "../view/tripDays.js";
 import PointView from "../view/tripPoint.js";
 import NoPointView from "../view/no-point.js";
-import {render, RenderPosition} from "../utils/render.js";
+import {render, replace, RenderPosition} from "../utils/render.js";
 
 export default class Trip {
   constructor(eventsContainer) {
@@ -37,11 +37,11 @@ export default class Trip {
     const pointEditComponent = new EventEditView(point);
 
     const replacePointToForm = () => {
-      tripEventsList.replaceChild(pointEditComponent.getElement(), pointComponent.getElement());
+      replace(pointEditComponent, pointComponent);
     };
 
     const replaceFormToPoint = () => {
-      tripEventsList.replaceChild(pointComponent.getElement(), pointEditComponent.getElement());
+      replace(pointComponent, pointEditComponent);
     };
 
     const onEscKeyDown = (evt) => {
@@ -81,7 +81,7 @@ export default class Trip {
 
     render(tripEvents, this._tripDaysComponent, RenderPosition.BEFOREEND);
     render(this._tripDaysComponent, this._tripDayComponent, RenderPosition.BEFOREEND);
-    render(this._tripDayComponent, this._tripListComponent,  RenderPosition.BEFOREEND);
+    render(this._tripDayComponent, this._tripListComponent, RenderPosition.BEFOREEND);
 
     this._renderPoints(0, this._eventsList.length);
   }
