@@ -1,4 +1,5 @@
-import {createElement, castTimeFormat, formatTime} from "../utils";
+import AbstractView from "./abstract.js";
+import {castTimeFormat, formatTime} from "../utils/point.js";
 
 const getDuration = (start, end) => {
   const interval = new Date(end - start);
@@ -60,26 +61,25 @@ const createPointTemplate = (point) => {
   );
 };
 
-export default class Point {
+export default class Point extends AbstractView {
   constructor(point) {
+    super();
     this._point = point;
-
     this._element = null;
+
+    this._editClickHandler = this._editClickHandler.bind(this);
   }
 
   getTemplate() {
     return createPointTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _editClickHandler() {
+    this._callback.editClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._editClickHandler);
   }
 }
