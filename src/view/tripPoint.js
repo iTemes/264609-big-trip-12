@@ -1,16 +1,5 @@
 import AbstractView from "./abstract.js";
-import {castTimeFormat, formatTime} from "../utils/point.js";
-
-const getDuration = (start, end) => {
-  const interval = new Date(end - start);
-  const days = interval.getDate() - 1;
-  const hours = interval.getUTCHours();
-  const minutes = interval.getMinutes();
-
-  return `${days === 0 ? `` : castTimeFormat(days) + `D `}\
-  ${hours === 0 ? `` : castTimeFormat(hours) + `H `}\
-  ${minutes === 0 ? `` : castTimeFormat(minutes) + `M`}`;
-};
+import {formatTime, getDuration} from "../utils/point.js";
 
 const createOffersTemplate = (offers) => offers
   .map((offer) => {
