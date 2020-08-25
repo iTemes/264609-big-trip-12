@@ -46,8 +46,7 @@ const getWeightForNullDate = (dateA, dateB) => {
 
 export const sortUp = (pointA, pointB) => {
   const weight = getWeightForNullDate(pointA.dueDate.start, pointB.dueDate.start);
-  console.log('###', pointA.dueDate.start)
-  console.log('###', pointB.dueDate.start)
+
   if (weight !== null) {
     return weight;
   }
