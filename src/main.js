@@ -3,7 +3,7 @@ import TripTabsVew from "./view/tripTabs.js";
 import TripFiltersView from "./view/tripFilters.js";
 
 import {generatePoint} from "./mock/point.js";
-import TripPresenter from "./presenter/trip.js";
+import TripPresenter from "./presenter/tripList.js";
 import {render, RenderPosition} from "./utils/render.js";
 
 const POINT_COUNT = 5;
