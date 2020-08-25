@@ -7,27 +7,61 @@ import TripDaysView from "../view/tripDays.js";
 import PointView from "../view/tripPoint.js";
 import NoPointView from "../view/no-point.js";
 import {render, replace, RenderPosition} from "../utils/render.js";
+import {sortUp, sortDown} from "../utils/point.js";
+import {SortType} from "../const.js";
 
 export default class Trip {
   constructor(eventsContainer) {
     this._eventsContainer = eventsContainer;
+    this._currentSortType = SortType.EVENT;
 
     this._sortComponent = new SortView();
     this._tripListComponent = new TripListView();
     this._noPointComponent = new NoPointView();
     this._tripDaysComponent = new TripDaysView();
     this._tripDayComponent = new TripDayView();
+
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   init(eventsList) {
     this._eventsList = eventsList.slice();
+    // сохраняем исходный массив:
+    this._sourcedEventsList = eventsList.slice();
 
     this._renderEvents();
+  }
+
+  _sortPoints(sortType) {
+    switch (sortType) {
+      case SortType.DATE_UP:
+        this._eventsList.sort(sortUp);
+        break;
+      case SortType.DATE_DOWN:
+        this._eventsList.sort(sortDown);
+        break;
+      default:
+        this._eventsList = this._sourcedEventsList.slice();
+    }
+
+    this._currentSortType = sortType;
+  }
+
+  _handleSortTypeChange(sortType) {
+    // - Сортируем задачи
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortPoints(sortType);
+    this._clearTripList();
+    this._renderTripList();
   }
 
   _renderSort() {
     // Метод для рендеринга сортировки
     render(this._eventsContainer, this._sortComponent, RenderPosition.AFTERBEGIN);
+    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
   _renderPoint(point) {
@@ -76,6 +110,10 @@ export default class Trip {
     render(this._eventsContainer, this._noPointComponent, RenderPosition.BEFOREEND);
   }
 
+  _clearTripList() {
+    this._tripListComponent.getElement().innerHTML = ``;
+  }
+
   _renderTripList() {
     const tripEvents = document.querySelector(`.trip-events`);
 
@@ -85,6 +123,7 @@ export default class Trip {
 
     this._renderPoints(0, this._eventsList.length);
   }
+
   _renderEvents() {
     // Метод для инициализации (начала работы) модуля,
     // бОльшая часть текущей функции renderEvents в main.js
