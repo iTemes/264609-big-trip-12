@@ -12,6 +12,7 @@ export default class Point {
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleFormToPoint = this._handleFormToPoint.bind(this);
   }
 
   init(point) {
@@ -25,6 +26,8 @@ export default class Point {
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._pointEditComponent.setFormToPointHandler(this._handleFormToPoint);
+
 
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -74,6 +77,10 @@ export default class Point {
   }
 
   _handleFormSubmit() {
+    this._replaceFormToPoint();
+  }
+
+  _handleFormToPoint() {
     this._replaceFormToPoint();
   }
 }

@@ -6,7 +6,7 @@ import TripDaysView from "../view/tripDays.js";
 import PointPresenter from "./point.js";
 import NoPointView from "../view/no-point.js";
 import {render, RenderPosition} from "../utils/render.js";
-
+import {updateItem} from "../utils/common.js";
 import {sortUp, sortPrice} from "../utils/point.js";
 import {SortType} from "../const.js";
 
@@ -24,6 +24,7 @@ export default class Trip {
     this._tripDayComponent = new TripDayView();
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._handlePointChange = this._handlePointChange.bind(this);
   }
 
   init(eventsList) {
@@ -33,6 +34,12 @@ export default class Trip {
     this._sourcedEventsList = eventsList.slice();
 
     this._renderEvents();
+  }
+
+  _handlePointChange(updatedPoint) {
+    this._eventsList = updateItem(this._eventsList, updatedPoint);
+    this._sourcedEventsList = updateItem(this._sourcedEventsList, updatedPoint);
+    this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
 
   _sortPoints(sortType) {
@@ -80,7 +87,6 @@ export default class Trip {
   }
 
   _clearTripList() {
-    console.log('presenter-', this._pointPresenter)
     Object
       .values(this._pointPresenter)
       .forEach((presenter) => presenter.destroy());

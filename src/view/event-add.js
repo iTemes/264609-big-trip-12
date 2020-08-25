@@ -2,6 +2,14 @@ import AbstractView from "./abstract.js";
 import {formatDate, formatTime} from "../utils/point.js";
 import {offerNames, offersStructure} from "../mock/point.js";
 
+const createPhotosTemplate = (photos) => photos
+  .map((photo) => {
+    return (
+      `<img class="event__photo" src="${photo}.jpg" alt="Event photo">`
+    );
+  })
+  .join(``);
+
 const createDestinations = (destinations) => destinations
   .map((destination)=> {
     return (
@@ -29,7 +37,7 @@ const createOfferTemplate = (offer, isChecked) => {
 };
 
 const createEventEditTemplate = (point) => {
-  const {type, destination, destinationList, price, offers, dueDate} = point;
+  const {description, photos, type, destination, destinationList, price, offers, dueDate} = point;
 
   const startDate = `${formatDate(dueDate.start)} ${formatTime(dueDate.start)}`;
   const endDate = `${formatDate(dueDate.end)} ${formatTime(dueDate.end)}`;
@@ -130,28 +138,16 @@ const createEventEditTemplate = (point) => {
           <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endDate}">
         </div>
 
-         <div class="event__field-group  event__field-group--price">
-            <label class="event__label" for="event-price-1">
-              <span class="visually-hidden">Price</span>
-              &euro;
-            </label>
-            <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${price}">
-          </div>
+        <div class="event__field-group  event__field-group--price">
+          <label class="event__label" for="event-price-1">
+            <span class="visually-hidden">Price</span>
+            &euro; ${price}
+          </label>
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+        </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
-
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
-        <label class="event__favorite-btn" for="event-favorite-1">
-          <span class="visually-hidden">Add to favorite</span>
-          <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
-          </svg>
-        </label>
-
-        <button class="event__rollup-btn" type="button">
-          <span class="visually-hidden">Open event</span>
-        </button>
+        <button class="event__reset-btn" type="reset">Cancel</button>
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
@@ -159,6 +155,17 @@ const createEventEditTemplate = (point) => {
 
           <div class="event__available-offers">
             ${offersMarkUp}
+          </div>
+        </section>
+
+        <section class="event__section  event__section--destination">
+          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+          <p class="event__destination-description">${description}</p>
+
+          <div class="event__photos-container">
+            <div class="event__photos-tape">
+              ${createPhotosTemplate(photos)}
+            </div>
           </div>
         </section>
       </section>
@@ -173,7 +180,6 @@ export default class EventEdit extends AbstractView {
     this._element = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._formToEventHandler = this._formToEventHandler.bind(this);
   }
 
   getTemplate() {
@@ -189,15 +195,4 @@ export default class EventEdit extends AbstractView {
     this._callback.formSubmit = callback;
     this.getElement().addEventListener(`submit`, this._formSubmitHandler);
   }
-
-  setFormToPointHandler(callback) {
-    this._callback.formSubmit = callback;
-    this.getElement().addEventListener(`click`, this._formSubmitHandler);
-  }
-
-  _formToEventHandler(evt) {
-    evt.preventDefault();
-    this._callback.formToEvent();
-  }
-
 }
