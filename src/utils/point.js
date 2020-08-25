@@ -54,6 +54,10 @@ export const sortUp = (pointA, pointB) => {
   return pointA.dueDate.start.getTime() - pointB.dueDate.start.getTime();
 };
 
+export const sortPrice = (pointA, pointB) => {
+  return pointA.price - pointB.price;
+};
+
 export const sortDown = (pointA, pointB) => {
   const weight = getWeightForNullDate(pointA.dueDate.start, pointB.dueDate.start);
 

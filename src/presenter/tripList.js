@@ -7,13 +7,15 @@ import PointPresenter from "./point.js";
 import NoPointView from "../view/no-point.js";
 import {render, RenderPosition} from "../utils/render.js";
 
-import {sortUp, sortDown} from "../utils/point.js";
+import {sortUp, sortPrice} from "../utils/point.js";
 import {SortType} from "../const.js";
 
 
 export default class Trip {
   constructor(eventsContainer) {
     this._eventsContainer = eventsContainer;
+    this._currentSortType = SortType.EVENT;
+    this._pointPresenter = {};
 
     this._sortComponent = new SortView();
     this._tripListComponent = new TripListView();
@@ -32,13 +34,14 @@ export default class Trip {
 
     this._renderEvents();
   }
+
   _sortPoints(sortType) {
     switch (sortType) {
       case SortType.DATE_UP:
         this._eventsList.sort(sortUp);
         break;
-      case SortType.DATE_DOWN:
-        this._eventsList.sort(sortDown);
+      case SortType.PRICE:
+        this._eventsList.sort(sortPrice);
         break;
       default:
         this._eventsList = this._sourcedEventsList.slice();
@@ -48,11 +51,6 @@ export default class Trip {
   }
 
   _handleSortTypeChange(sortType) {
-    // - Сортируем задачи
-    if (this._currentSortType === sortType) {
-      return;
-    }
-
     this._sortPoints(sortType);
     this._clearTripList();
     this._renderTripList();
@@ -67,6 +65,7 @@ export default class Trip {
   _renderPoint(point) {
     const pointPresenter = new PointPresenter(this._tripListComponent);
     pointPresenter.init(point);
+    this._pointPresenter[point.id] = pointPresenter;
   }
 
   _renderPoints(from, to) {
@@ -81,7 +80,11 @@ export default class Trip {
   }
 
   _clearTripList() {
-    this._tripListComponent.getElement().innerHTML = ``;
+    console.log('presenter-', this._pointPresenter)
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._taskPresenter = {};
   }
 
   _renderTripList() {
