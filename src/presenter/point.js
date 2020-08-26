@@ -3,16 +3,19 @@ import PointView from "../view/tripPoint.js";
 import {render, replace, remove, RenderPosition} from "../utils/render.js";
 
 export default class Point {
-  constructor(pointListContainer) {
+  constructor(pointListContainer, changeData) {
     this._pointListContainer = pointListContainer;
+    this._changeData = changeData;
 
     this._pointComponent = null;
     this._pointEditComponent = null;
 
+    // Обработчики
     this._handleEditClick = this._handleEditClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleFormToPoint = this._handleFormToPoint.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(point) {
@@ -24,10 +27,11 @@ export default class Point {
     this._pointComponent = new PointView(point);
     this._pointEditComponent = new EventEditView(point);
 
+    // Присвоение Обработчиков
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointEditComponent.setFormToPointHandler(this._handleFormToPoint);
-
+    this._pointEditComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -76,11 +80,24 @@ export default class Point {
     this._replacePointToForm();
   }
 
-  _handleFormSubmit() {
+  _handleFormSubmit(point) {
+    this._changeData(point);
     this._replaceFormToPoint();
   }
 
   _handleFormToPoint() {
     this._replaceFormToPoint();
+  }
+
+  _handleFavoriteClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._point,
+            {
+              isFavorite: !this._point.isFavorite
+            }
+        )
+    );
   }
 }

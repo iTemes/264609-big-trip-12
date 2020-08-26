@@ -16,9 +16,9 @@ const renderHeader = () => {
   const tripMainContainer = document.querySelector(`.trip-main`);
   const tripControls = tripMainContainer.querySelector(`.trip-controls`);
 
-  render(tripMainContainer, new TripInfoView().getElement(), RenderPosition.AFTERBEGIN);
-  render(tripControls, new TripTabsVew().getElement(), RenderPosition.BEFOREEND);
-  render(tripControls, new TripFiltersView().getElement(), RenderPosition.BEFOREEND);
+  render(tripMainContainer, new TripInfoView(), RenderPosition.AFTERBEGIN);
+  render(tripControls, new TripTabsVew(), RenderPosition.BEFOREEND);
+  render(tripControls, new TripFiltersView(), RenderPosition.BEFOREEND);
 };
 
 const tripPresenter = new TripPresenter(tripEvents);

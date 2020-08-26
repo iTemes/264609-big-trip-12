@@ -151,7 +151,8 @@ const generatePoint = () => {
     photos: getPhotos(),
     price: getRandomInteger(Price.MIN, Price.MAX),
     offers: typeToOffer.get(type),
-    offersList: offersStructure
+    offersList: offersStructure,
+    isFavorite: Boolean(getRandomInteger(0, 1)),
   };
 };
 

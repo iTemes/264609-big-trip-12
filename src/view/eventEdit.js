@@ -29,7 +29,7 @@ const createOfferTemplate = (offer, isChecked) => {
 };
 
 const createEventEditTemplate = (point) => {
-  const {type, destination, destinationList, price, offers, dueDate} = point;
+  const {type, destination, destinationList, price, offers, dueDate, isFavorite} = point;
 
   const startDate = `${formatDate(dueDate.start)} ${formatTime(dueDate.start)}`;
   const endDate = `${formatDate(dueDate.end)} ${formatTime(dueDate.end)}`;
@@ -141,7 +141,7 @@ const createEventEditTemplate = (point) => {
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
         <button class="event__reset-btn" type="reset">Delete</button>
 
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
+        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? 'checked' : ''}>
         <label class="event__favorite-btn" for="event-favorite-1">
           <span class="visually-hidden">Add to favorite</span>
           <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -174,6 +174,8 @@ export default class EventEdit extends AbstractView {
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formToEventHandler = this._formToEventHandler.bind(this);
+    this._isFavoriteHandler = this._isFavoriteHandler.bind(this);
+
   }
 
   getTemplate() {
@@ -182,7 +184,7 @@ export default class EventEdit extends AbstractView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this._point);
   }
 
   setFormSubmitHandler(callback) {
@@ -191,13 +193,25 @@ export default class EventEdit extends AbstractView {
   }
 
   setFormToPointHandler(callback) {
-    this._callback.formSubmit = callback;
-    this.getElement().addEventListener(`click`, this._formSubmitHandler);
+    this._callback.formToEvent = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._formToEventHandler);
   }
 
   _formToEventHandler(evt) {
     evt.preventDefault();
     this._callback.formToEvent();
+  }
+
+  _isFavoriteHandler(evt) {
+    evt.preventDefault();
+
+    this._callback.isFavoriteEvent();
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.isFavoriteEvent = callback;
+
+    this.getElement().querySelector(`.event__favorite-icon`).addEventListener(`click`, this._isFavoriteHandler);
   }
 
 }
