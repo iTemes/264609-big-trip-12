@@ -5,7 +5,7 @@ import TripDayView from "../view/tripDay.js";
 import TripDaysView from "../view/tripDays.js";
 import PointPresenter from "./point.js";
 import NoPointView from "../view/no-point.js";
-import PointsItemView from "../view/point-item.js"
+import PointsItemView from "../view/point-item.js";
 import {render, remove, RenderPosition, createRenderFragment} from "../utils/render.js";
 import {updateItem} from "../utils/common.js";
 import {sortUp, sortPrice} from "../utils/point.js";
@@ -93,9 +93,9 @@ export default class Trip {
   _createPointsItem(point) {
     const pointsItemView = new PointsItemView();
     const pointPresenter = new PointPresenter(
-      pointsItemView,
-      this._handlePointChange,
-      this._handleСhangeMode
+        pointsItemView,
+        this._handlePointChange,
+        this._handleСhangeMode
     );
     pointPresenter.init(point, this._destinations);
     this._pointPresenter[point.id] = pointPresenter;
@@ -145,16 +145,16 @@ export default class Trip {
       this._renderSort();
       this._daysView = this._daysView || new TripDaysView();
       this._dayViews = this._currentSortType === SortType.EVENT
-      ? this._createEventDays()
-      : [this._createEventDay(this._points)];
+        ? this._createEventDays()
+        : [this._createEventDay(this._points)];
 
       render(
-        this._daysView,
-        createRenderFragment(this._dayViews),
-        RenderPosition.BEFOREEND
-    );
+          this._daysView,
+          createRenderFragment(this._dayViews),
+          RenderPosition.BEFOREEND
+      );
 
-    render(this._eventsContainer, this._daysView,  RenderPosition.BEFOREEND);
+      render(this._eventsContainer, this._daysView, RenderPosition.BEFOREEND);
     }
   }
 

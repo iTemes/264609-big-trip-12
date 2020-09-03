@@ -35,7 +35,7 @@ const POINT_TYPES = [
   `Restaurant`,
 ];
 
-const DESTINATIONS  = [
+const DESTINATIONS = [
   `Amsterdam`,
   `Chamonix`,
   `Geneva`,
@@ -158,4 +158,4 @@ const generatePoint = () => {
 
 const generatePoints = (count) => new Array(count).fill().map(generatePoint);
 
-export {generatePoints, DESTINATIONS };
+export {generatePoints, DESTINATIONS};

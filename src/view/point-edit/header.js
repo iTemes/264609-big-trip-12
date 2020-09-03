@@ -34,4 +34,4 @@ export const createTripPointEditHeaderTemplate = (data, destinations) => {
       ${createRollupButtonTemplate()}
     </header>`
   );
-}
+};

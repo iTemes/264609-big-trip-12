@@ -1,8 +1,8 @@
 
 import AbstractView from './abstract';
-import {extend} from '../utils/common.js'
+import {extend} from '../utils/common.js';
 export default class AbstractSmart extends AbstractView {
-  constructor () {
+  constructor() {
     super();
     this._data = {};
   }
@@ -12,7 +12,6 @@ export default class AbstractSmart extends AbstractView {
   }
 
   updateData(update, justDataUpdating) {
-    console.log('update', update);
     if (!update) {
       return;
     }

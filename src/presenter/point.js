@@ -1,7 +1,7 @@
 import PointEditView from "../view/point-edit/point-edit.js";
 import PointView from "../view/point/point.js";
 import {render, replace, remove, RenderPosition} from "../utils/render.js";
-import {extend} from '../utils/common.js'
+import {extend} from '../utils/common.js';
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -25,7 +25,7 @@ export default class Point {
     this._handleEscKeyDown = this._handleEscKeyDown.bind(this);
     this._handleFormToPoint = this._handleFormToPoint.bind(this);
     this._handleResetPointEdit = this._handleResetPointEdit.bind(this);
-    this._handleFavoriteClick =  this._handleFavoriteClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(point, destinations) {

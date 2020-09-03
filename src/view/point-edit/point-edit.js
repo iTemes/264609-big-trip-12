@@ -1,8 +1,8 @@
 
 import AbstractSmartView from "../smart.js";
-import {extend} from '../../utils/common.js'
-import {createTripPointEditHeaderTemplate} from "./header.js"
-import {createDetailTemplate} from "./detail.js"
+import {extend} from '../../utils/common.js';
+import {createTripPointEditHeaderTemplate} from "./header.js";
+import {createDetailTemplate} from "./detail.js";
 
 const checkDestinationOnError = (destinations, destination) => !destinations.includes(destination);
 
@@ -159,7 +159,7 @@ export default class PointEdit extends AbstractSmartView {
 
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._handleFavoriteClick);;
+    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._handleFavoriteClick);
   }
 
 }
