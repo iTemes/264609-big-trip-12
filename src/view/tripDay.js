@@ -1,21 +1,38 @@
 import AbstractView from "./abstract.js";
 
-const createTripDayTemplate = () => {
+const convertToTitle = (value) => {
+  const date = new Date(value);
+  const day = date.getDate();
+  const month = date.toLocaleString(`en-us`, {month: `short`});
+
+  return `${month} ${day}`;
+};
+
+const getDayInfoTemplate = ({dayCount, date}) => {
+  return (
+    `<div class="day__info">
+      <span class="day__counter">${dayCount}</span>
+      <time class="day__date" datetime=${date}>
+        ${convertToTitle(date)}
+      </time>
+    </div>`
+  );
+};
+
+const createTripDayTemplate = (day) => {
   return (
     `<li class="trip-days__item  day">
-        <div class="day__info">
-          <span class="day__counter">1</span>
-          <time class="day__date" datetime="2019-03-18">MAR 18</time>
-        </div>
-
-
-      </li>
-    `
+    ${day.isCountRender ? getDayInfoTemplate(day) : `<div class="day__info"></div>`}
+    </li>`
   );
 };
 
 export default class TripDay extends AbstractView {
+  constructor(dayData) {
+    super();
+    this._dayData = dayData;
+  }
   getTemplate() {
-    return createTripDayTemplate();
+    return createTripDayTemplate(this._dayData);
   }
 }

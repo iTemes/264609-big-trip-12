@@ -5,6 +5,14 @@ export const RenderPosition = {
   BEFOREEND: `beforeend`
 };
 
+const getElement = (element) => {
+  if (element instanceof Abstract) {
+    return element.getElement();
+  }
+
+  return element;
+};
+
 export const render = (container, element, place) => {
   if (container instanceof Abstract) {
     container = container.getElement();
@@ -66,3 +74,17 @@ export const remove = (component) => {
   component.removeElement();
 };
 
+export const createRenderFragment = (elements) => {
+  const fragment = document.createDocumentFragment();
+
+  if (!Array.isArray(elements)) {
+    elements = [elements];
+  }
+
+  elements.forEach(function (element) {
+    element = getElement(element);
+    fragment.appendChild(element);
+  });
+
+  return fragment;
+};
