@@ -2,10 +2,7 @@ import AbstractView from "./abstract.js";
 
 const createTripDaysTemplate = () => {
   return (
-    `<ul class="trip-days">
-
-    </ul>
-    `
+    `<ul class="trip-days"></ul>`
   );
 };
 

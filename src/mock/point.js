@@ -1,4 +1,14 @@
-import {getRandomInteger, shuffle} from "../utils/common.js";
+import {
+  getRandomInteger,
+  getRandomBool,
+  getRandomArray,
+  getRandomArrayValue,
+  MoveDate,
+  getRandomDate,
+} from "../utils/common.js";
+
+import {diffDate} from '../utils/date.js';
+import {extend} from '../utils/common.js';
 
 // Date.now() и Math.random() - плохие решения для генерации id
 // в "продуктовом" коде, а для моков самое то.
@@ -6,7 +16,13 @@ import {getRandomInteger, shuffle} from "../utils/common.js";
 // вроде nanoid - https://github.com/ai/nanoid
 const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
-const types = [
+const moveDateConfig = {
+  minute: 10,
+  hour: 3,
+  day: 7,
+};
+
+const POINT_TYPES = [
   `Taxi`,
   `Bus`,
   `Train`,
@@ -19,7 +35,7 @@ const types = [
   `Restaurant`,
 ];
 
-const dests = [
+const DESTINATIONS  = [
   `Amsterdam`,
   `Chamonix`,
   `Geneva`,
@@ -28,101 +44,64 @@ const dests = [
   `Mosow`,
 ];
 
+const DESCRIPTION =
+  `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
+
 const TimePeriodInMinute = {
   MIN: 10,
   MAX: 60 * 12,
 };
 
-const Price = {
+const PRICE = {
   MIN: 5,
   MAX: 200,
 };
 
-const OfferCount = {
+const OFFERCOUNT = {
   MIN: 0,
-  MAX: 2,
+  MAX: 7,
 };
 
-const description =
-  `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`;
-
-const offersStructure = {
-  luggage: {
-    name: `luggage`,
-    title: `Add luggage`,
-    price: 10,
-    checked: Boolean(getRandomInteger(0, 1)),
+const OFFERS = [
+  {
+    key: `luggage`,
+    name: `Add luggage`,
+    price: `30`,
+    isActivated: getRandomBool(),
   },
-  comfort: {
-    name: `comfort`,
-    title: `Switch to comfort class`,
-    price: 150,
-    checked: Boolean(getRandomInteger(0, 1)),
+  {
+    key: `comfort`,
+    name: `Switch to comfort class`,
+    price: `100`,
+    isActivated: getRandomBool(),
   },
-  meal: {
-    name: `meal`,
-    title: `Add meal`,
-    price: 2,
-    checked: Boolean(getRandomInteger(0, 1)),
+  {
+    key: `meal`,
+    name: `Add meal`,
+    price: `15`,
+    isActivated: getRandomBool(),
   },
-  seats: {
-    name: `seats`,
-    title: `Choose seats`,
-    price: 9,
-    checked: Boolean(getRandomInteger(0, 1)),
+  {
+    key: `seats`,
+    name: `Choose seats`,
+    price: `5`,
+    isActivated: getRandomBool(),
   },
-  train: {
-    name: `train`,
-    title: `Travel by train`,
-    price: 40,
-    checked: Boolean(getRandomInteger(0, 1)),
+  {
+    key: `train`,
+    name: `Travel by train`,
+    price: `40`,
+    isActivated: getRandomBool(),
   },
-};
+];
 
-const getOfferNames = () => {
-  const names = [];
-  for (let key in offersStructure) {
-    if (key !== undefined) {
-      names.push(offersStructure[key].name);
-    }
-  }
-  return names;
-};
+const generateOffers = () => {
+  const offers = getRandomArray(OFFERS, getRandomInteger(OFFERCOUNT.MIN, OFFERCOUNT.MAX));
+  offers.forEach((offer) => {
+    offer.isActivated = getRandomBool();
+  });
 
-const getOffer = (names) => {
-  return names.map((it) => offersStructure[it]);
-};
-
-const offerNames = getOfferNames();
-
-const typeToOffer = new Map();
-
-types.forEach((type) => {
-  const count = getRandomInteger(OfferCount.MIN, OfferCount.MAX);
-  typeToOffer.set(type, getOffer(shuffle(offerNames.slice()).slice(count === 0 ? offerNames.length : -1 * count)));
-});
-
-const generateDescription = () => {
-  const randomMax = 5;
-  const randomMin = 1;
-
-  const sentenses = description.split(`.`);
-
-  return new Array(getRandomInteger(randomMin, randomMax))
-    .fill(``)
-    .map(() => sentenses[getRandomInteger(0, sentenses.length - 1)])
-    .join(`.`);
-};
-
-const getPointType = () => {
-  const randomIndex = getRandomInteger(0, types.length - 1);
-
-  return types[randomIndex];
-};
-
-const getDestination = () => {
-  const randomIndex = getRandomInteger(0, dests.length - 1);
-  return dests[randomIndex];
+  return offers;
 };
 
 const getDate = (date) => {
@@ -138,22 +117,45 @@ const getPhotos = () => {
     .map(() => `http://picsum.photos/300/150?r=${Math.random()}`);
 };
 
+const generateDescription = () => {
+  const randomMax = 5;
+  const randomMin = 1;
+
+  const sentenses = DESCRIPTION.split(`.`);
+
+  return new Array(getRandomInteger(randomMin, randomMax))
+    .fill(``)
+    .map(() => sentenses[getRandomInteger(0, sentenses.length - 1)])
+    .join(`.`);
+};
+
 const generatePoint = () => {
   let currentDate = new Date(2020, 9, 8);
-  const type = getPointType();
+
+  const dateStart = new Date(getRandomDate(moveDateConfig));
+  const dateEnd = new Date(getRandomDate(extend(
+      moveDateConfig,
+      {
+        dateStart,
+        move: MoveDate.FUTURE,
+      }
+  )));
   return {
     id: generateId(),
+    type: getRandomArrayValue(POINT_TYPES),
+    destination: getRandomArrayValue(DESTINATIONS),
+    start: dateStart,
+    end: dateEnd,
+    duration: diffDate(dateEnd, dateStart),
     description: generateDescription(),
-    type,
-    destination: getDestination(),
-    destinationList: dests,
     dueDate: getDate(currentDate),
     photos: getPhotos(),
-    price: getRandomInteger(Price.MIN, Price.MAX),
-    offers: typeToOffer.get(type),
-    offersList: offersStructure,
-    isFavorite: Boolean(getRandomInteger(0, 1)),
+    price: getRandomInteger(PRICE.MIN, PRICE.MAX),
+    offers: generateOffers(),
+    isFavorite: getRandomBool(),
   };
 };
 
-export {generatePoint, offersStructure, offerNames};
+const generatePoints = (count) => new Array(count).fill().map(generatePoint);
+
+export {generatePoints, DESTINATIONS };
