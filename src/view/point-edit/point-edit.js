@@ -19,9 +19,7 @@ export default class PointEdit extends AbstractSmartView {
   constructor(point, destinations) {
     super();
     this._data = PointEdit.parsePointToData(point, destinations);
-    this._point = point;
     this._destinations = destinations;
-    this._element = null;
     this._typeListElement = null;
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
@@ -33,7 +31,6 @@ export default class PointEdit extends AbstractSmartView {
     this._handleDestinationChange = this._handleDestinationChange.bind(this);
 
     this._setInnerHandlers();
-    this._setTypeInputChangeHandlers();
   }
 
   static parsePointToData(point, destinations) {
@@ -57,7 +54,7 @@ export default class PointEdit extends AbstractSmartView {
   }
 
   getTemplate() {
-    return createPointEditTemplate(this._point, this._destinations);
+    return createPointEditTemplate(this._data, this._destinations);
   }
 
   reset(point) {
@@ -75,16 +72,16 @@ export default class PointEdit extends AbstractSmartView {
   }
 
   _setInnerHandlers() {
-    // this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._handleFavoriteClick);
+    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._handleFavoriteClick);
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._handlePriceChange);
     this.getElement().querySelector(`.event__type-list`).addEventListener(`click`, this._handleTypeEventChange);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._handleDestinationChange);
   }
 
   restoreHandlers() {
-    this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setFormResetHandler(this._callback.formReset);
-    this.setFormToPointHandler(this._callback.formToEvent);
+    this.setHandleFormSubmit(this._callback.formSubmit);
+    this.setHandleFormReset(this._callback.formReset);
+    this.setHandleFormToPoint(this._callback.formToEvent);
 
     this._setInnerHandlers();
   }
@@ -101,7 +98,9 @@ export default class PointEdit extends AbstractSmartView {
 
   _handleFavoriteClick(evt) {
     evt.preventDefault();
-    this._callback.favoriteClick();
+    this.updateData({
+      isFavorite: !this._data.isFavorite,
+    });
   }
 
   _handlePriceChange(evt) {
@@ -142,24 +141,18 @@ export default class PointEdit extends AbstractSmartView {
   }
 
 
-  setFormToPointHandler(callback) {
+  setHandleFormToPoint(callback) {
     this._callback.formToEvent = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._handleFormToEvent);
   }
 
-  setFormSubmitHandler(callback) {
+  setHandleFormSubmit(callback) {
     this._callback.formSubmit = callback;
     this.getElement().addEventListener(`submit`, this._handleFormSubmit);
   }
 
-  setFormResetHandler(callback) {
+  setHandleFormReset(callback) {
     this._callback.formReset = callback;
     this.getElement().addEventListener(`reset`, this._handleResetForm);
   }
-
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.event__favorite-checkbox`).addEventListener(`click`, this._handleFavoriteClick);
-  }
-
 }
