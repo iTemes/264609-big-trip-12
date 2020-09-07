@@ -21,14 +21,6 @@ export const getRandomInteger = (a = 0, b = 1) => {
 
 export const getRandomBool = () => Math.random() > 0.5;
 
-export const shuffle = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-};
-
 export const getRandomArray = (arr, length = arr.length) => arr
     .slice()
     .sort(() => Math.random() - 0.5)
