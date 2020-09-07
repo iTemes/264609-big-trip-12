@@ -1,6 +1,7 @@
 
 import AbstractView from './abstract';
 import {extend} from '../utils/common.js';
+
 export default class AbstractSmart extends AbstractView {
   constructor() {
     super();
@@ -40,6 +41,4 @@ export default class AbstractSmart extends AbstractView {
 
     this.restoreHandlers();
   }
-
-
 }
