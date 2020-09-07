@@ -104,13 +104,6 @@ const generateOffers = () => {
   return offers;
 };
 
-const getDate = (date) => {
-  return {
-    start: new Date(date.setMinutes(date.getMinutes() + getRandomInteger(TimePeriodInMinute.MIN, TimePeriodInMinute.MAX))),
-    end: new Date(date.setMinutes(date.getMinutes() + getRandomInteger(TimePeriodInMinute.MIN, TimePeriodInMinute.MAX))),
-  };
-};
-
 const getPhotos = () => {
   return new Array(getRandomInteger(4, 7))
     .fill(``)
@@ -130,8 +123,6 @@ const generateDescription = () => {
 };
 
 const generatePoint = () => {
-  let currentDate = new Date(2020, 9, 8);
-
   const dateStart = new Date(getRandomDate(moveDateConfig));
   const dateEnd = new Date(getRandomDate(extend(
       moveDateConfig,
@@ -148,7 +139,6 @@ const generatePoint = () => {
     end: dateEnd,
     duration: diffDate(dateEnd, dateStart),
     description: generateDescription(),
-    dueDate: getDate(currentDate),
     photos: getPhotos(),
     price: getRandomInteger(PRICE.MIN, PRICE.MAX),
     offers: generateOffers(),

@@ -1,31 +1,25 @@
+import moment from 'moment';
+
 import {
   MINUTE,
   HOUR,
   DAY,
 } from '../const.js';
 
-const formatter = new Intl.DateTimeFormat([], {
-  year: `2-digit`,
-  month: `numeric`,
-  day: `numeric`,
-  hour: `2-digit`,
-  minute: `2-digit`,
-  hour12: false,
-  timeZone: `UTC`
-});
+const isDate = (date) => date instanceof Date;
 
 export const convertNumberOfDate = (value) => String(value).padStart(2, `0`);
 /**
  * @param {date} date
  * @return {date} 17/08/20 18:00
  */
-export const formatDateYyyyMmDdHhMmWithDash = (date) => formatter.format(date).replace(`,`, ``);
+export const formatDateYyyyMmDdHhMmWithDash = (date) => isDate(date) ? moment(date).format(`DD/MM/YY HH:mm`) : ``;
 
 /**
  * @param {date} date
  * @return {date} 2020-08-17T18:00
  */
-export const formatDateISODdMmYyyyHhMm = (date) => date.toISOString().slice(0, 16);
+export const formatDateISODdMmYyyyHhMm = (date) => isDate(date) ? moment(date).format(`YYYY-MM-DD[T]HH:mm`) : ``;
 
 /**
  * @param {date} date1
