@@ -27,6 +27,7 @@ export default class PointEdit extends AbstractSmartView {
     this._destinations = destinations;
     this._typeListElement = null;
     this._startDatePicker = null;
+    this._endDatePicker = null;
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleResetForm = this._handleResetForm.bind(this);
@@ -37,6 +38,7 @@ export default class PointEdit extends AbstractSmartView {
     this._handleDestinationChange = this._handleDestinationChange.bind(this);
     this._handleOffersChange = this._handleOffersChange.bind(this);
     this._handleStartDateChange = this._handleStartDateChange.bind(this);
+    this._handleEndDateChange = this._handleEndDateChange.bind(this);
 
     this._setInnerHandlers();
   }
@@ -86,9 +88,10 @@ export default class PointEdit extends AbstractSmartView {
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._handlePriceChange);
     this.getElement().querySelector(`.event__type-list`).addEventListener(`click`, this._handleTypeEventChange);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._handleDestinationChange);
-    this.getElement().querySelector(`.event__input--time`).addEventListener(`change`, this._handleStartDateChange);
+
     this._setHandleOffersChange();
     this._setStartDateChangeHandler();
+    this._setEndDateChangeHandler();
   }
 
   restoreHandlers() {
@@ -158,13 +161,6 @@ export default class PointEdit extends AbstractSmartView {
     }, true);
   }
 
-  _setHandleOffersChange() {
-    const offerElements = this.getElement().querySelectorAll(`.event__offer-checkbox`);
-    offerElements.forEach((offerElement) => {
-      offerElement.addEventListener(`change`, this._handleOffersChange);
-    });
-  }
-
   _handleStartDateChange([start]) {
     const end = this._data.end;
     const isDatesError = checkDatesOnError(start, end);
@@ -174,6 +170,31 @@ export default class PointEdit extends AbstractSmartView {
       isDatesError,
     });
   }
+
+
+  _handleEndDateChange([end]) {
+    const start = this._data.start;
+    const isDatesError = checkDatesOnError(start, end);
+    this.updateData({
+      end,
+      duration: diffDate(end, start),
+      isDatesError,
+    });
+  }
+
+  _handleResetForm(evt) {
+    evt.preventDefault();
+    this._callback.formReset();
+  }
+
+
+  _setHandleOffersChange() {
+    const offerElements = this.getElement().querySelectorAll(`.event__offer-checkbox`);
+    offerElements.forEach((offerElement) => {
+      offerElement.addEventListener(`change`, this._handleOffersChange);
+    });
+  }
+
 
   _setStartDateChangeHandler(callback) {
 
@@ -191,14 +212,30 @@ export default class PointEdit extends AbstractSmartView {
           time_24hr: true,
           dateFormat: `d/m/y H:i`,
           defaultDate: this._data.start,
-          onChange: this._startDateChangeHandler,
+          onChange: this._handleStartDateChange,
         }
     );
   }
 
-  _handleResetForm(evt) {
-    evt.preventDefault();
-    this._callback.formReset();
+  _setEndDateChangeHandler(callback) {
+
+    this._callback.endDateChange = callback;
+    if (this._endDatePicker) {
+      this._endDatePicker.destroy();
+      this._endDatePicker = null;
+    }
+
+    this._endDatePicker = flatpickr(
+        this.getElement().querySelector(`#event-end-time-1`),
+        {
+          enableTime: true,
+          /* eslint */
+          time_24hr: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.end,
+          onChange: this._handleEndDateChange,
+        }
+    );
   }
 
   _setTypeInputChangeHandlers() {
