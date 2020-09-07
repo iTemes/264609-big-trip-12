@@ -1,6 +1,7 @@
 
 import AbstractSmartView from "../smart.js";
 import {extend} from '../../utils/common.js';
+import {diffDate} from '../../utils/date.js';
 import {createTripPointEditHeaderTemplate} from "./header.js";
 import {createDetailTemplate} from "./detail.js";
 import flatpickr from "flatpickr";
@@ -8,6 +9,7 @@ import flatpickr from "flatpickr";
 import "../../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const checkDestinationOnError = (destinations, destination) => !destinations.includes(destination);
+const checkDatesOnError = (start, end) => (+start) > (+end);
 
 const createPointEditTemplate = (point, destinations) => {
   return (
@@ -24,7 +26,7 @@ export default class PointEdit extends AbstractSmartView {
     this._data = PointEdit.parsePointToData(point, destinations);
     this._destinations = destinations;
     this._typeListElement = null;
-    this._datepicker = null;
+    this._startDatePicker = null;
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleResetForm = this._handleResetForm.bind(this);
@@ -33,18 +35,20 @@ export default class PointEdit extends AbstractSmartView {
     this._handlePriceChange = this._handlePriceChange.bind(this);
     this._handleTypeEventChange = this._handleTypeEventChange.bind(this);
     this._handleDestinationChange = this._handleDestinationChange.bind(this);
-    this._handleDateChange = this._handleDateChange.bind(this);
+    this._handleOffersChange = this._handleOffersChange.bind(this);
+    this._handleStartDateChange = this._handleStartDateChange.bind(this);
 
     this._setInnerHandlers();
   }
 
   static parsePointToData(point, destinations) {
-    const {destination} = point;
+    const {destination, start, end} = point;
 
     return extend(
         point,
         {
           isDestinationError: checkDestinationOnError(destinations, destination),
+          isDatesError: checkDatesOnError(start, end),
         }
     );
   }
@@ -54,6 +58,7 @@ export default class PointEdit extends AbstractSmartView {
     data = extend(data);
 
     delete data.isDestinationError;
+    delete data.isDatesError;
 
     return data;
   }
@@ -81,7 +86,9 @@ export default class PointEdit extends AbstractSmartView {
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._handlePriceChange);
     this.getElement().querySelector(`.event__type-list`).addEventListener(`click`, this._handleTypeEventChange);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._handleDestinationChange);
-    this.getElement().querySelector(`.event__input--time`).addEventListener(`change`, this._handleDateChange);
+    this.getElement().querySelector(`.event__input--time`).addEventListener(`change`, this._handleStartDateChange);
+    this._setHandleOffersChange();
+    this._setStartDateChangeHandler();
   }
 
   restoreHandlers() {
@@ -134,9 +141,59 @@ export default class PointEdit extends AbstractSmartView {
     });
   }
 
-  _handleDateChange() {
+  _handleOffersChange(evt) {
     evt.preventDefault();
-    console.log('date change');
+    const offerKey = evt.target.value;
+    const isActivated = evt.target.checked;
+    const offers = this._data.offers.map((offer) => {
+      if (offerKey === offer.key) {
+        return extend(offer, {isActivated});
+      }
+
+      return offer;
+    });
+
+    this.updateData({
+      offers,
+    }, true);
+  }
+
+  _setHandleOffersChange() {
+    const offerElements = this.getElement().querySelectorAll(`.event__offer-checkbox`);
+    offerElements.forEach((offerElement) => {
+      offerElement.addEventListener(`change`, this._handleOffersChange);
+    });
+  }
+
+  _handleStartDateChange([start]) {
+    const end = this._data.end;
+    const isDatesError = checkDatesOnError(start, end);
+    this.updateData({
+      start,
+      duration: diffDate(end, start),
+      isDatesError,
+    });
+  }
+
+  _setStartDateChangeHandler(callback) {
+
+    this._callback.startDateChange = callback;
+    if (this._startDatePicker) {
+      this._startDatePicker.destroy();
+      this._startDatePicker = null;
+    }
+
+    this._startDatePicker = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          enableTime: true,
+          /* eslint */
+          time_24hr: true,
+          dateFormat: `d/m/y H:i`,
+          defaultDate: this._data.start,
+          onChange: this._startDateChangeHandler,
+        }
+    );
   }
 
   _handleResetForm(evt) {
