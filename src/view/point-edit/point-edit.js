@@ -208,7 +208,7 @@ export default class PointEdit extends AbstractSmartView {
         this.getElement().querySelector(`#event-start-time-1`),
         {
           enableTime: true,
-          /* eslint */
+          /* eslint-disable-next-line */
           time_24hr: true,
           dateFormat: `d/m/y H:i`,
           defaultDate: this._data.start,
@@ -229,7 +229,7 @@ export default class PointEdit extends AbstractSmartView {
         this.getElement().querySelector(`#event-end-time-1`),
         {
           enableTime: true,
-          /* eslint */
+          /* eslint-disable-next-line */
           time_24hr: true,
           dateFormat: `d/m/y H:i`,
           defaultDate: this._data.end,
