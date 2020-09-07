@@ -3,6 +3,9 @@ import AbstractSmartView from "../smart.js";
 import {extend} from '../../utils/common.js';
 import {createTripPointEditHeaderTemplate} from "./header.js";
 import {createDetailTemplate} from "./detail.js";
+import flatpickr from "flatpickr";
+
+import "../../../node_modules/flatpickr/dist/flatpickr.min.css";
 
 const checkDestinationOnError = (destinations, destination) => !destinations.includes(destination);
 
@@ -21,6 +24,7 @@ export default class PointEdit extends AbstractSmartView {
     this._data = PointEdit.parsePointToData(point, destinations);
     this._destinations = destinations;
     this._typeListElement = null;
+    this._datepicker = null;
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleResetForm = this._handleResetForm.bind(this);
@@ -29,6 +33,7 @@ export default class PointEdit extends AbstractSmartView {
     this._handlePriceChange = this._handlePriceChange.bind(this);
     this._handleTypeEventChange = this._handleTypeEventChange.bind(this);
     this._handleDestinationChange = this._handleDestinationChange.bind(this);
+    this._handleDateChange = this._handleDateChange.bind(this);
 
     this._setInnerHandlers();
   }
@@ -76,6 +81,7 @@ export default class PointEdit extends AbstractSmartView {
     this.getElement().querySelector(`.event__input--price`).addEventListener(`change`, this._handlePriceChange);
     this.getElement().querySelector(`.event__type-list`).addEventListener(`click`, this._handleTypeEventChange);
     this.getElement().querySelector(`.event__input--destination`).addEventListener(`change`, this._handleDestinationChange);
+    this.getElement().querySelector(`.event__input--time`).addEventListener(`change`, this._handleDateChange);
   }
 
   restoreHandlers() {
@@ -126,6 +132,11 @@ export default class PointEdit extends AbstractSmartView {
       destination,
       isDestinationError: checkDestinationOnError(this._destinations, destination),
     });
+  }
+
+  _handleDateChange() {
+    evt.preventDefault();
+    console.log('date change');
   }
 
   _handleResetForm(evt) {
