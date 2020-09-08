@@ -8,15 +8,17 @@ const Mode = {
 };
 
 export default class Point {
-  constructor(pointListContainer, changePoint, changeMode) {
+  constructor(pointListContainer, changePoint, changeMode, updateTrip) {
     this._pointListContainer = pointListContainer;
     this._changePoint = changePoint;
     this._changeMode = changeMode;
+    this._updateTrip = updateTrip;
     this._destinations = null;
     this._pointComponent = null;
     this._pointEditComponent = null;
     this._point = null;
     this._mode = Mode.DEFAULT;
+    this._isShouldUpdateTrip = null;
 
     // Обработчики
     this._handleEditClick = this._handleEditClick.bind(this);

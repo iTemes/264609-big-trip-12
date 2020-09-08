@@ -11,20 +11,21 @@ import "../../../node_modules/flatpickr/dist/flatpickr.min.css";
 const checkDestinationOnError = (destinations, destination) => !destinations.includes(destination);
 const checkDatesOnError = (start, end) => (+start) > (+end);
 
-const createPointEditTemplate = (point, destinations) => {
+const createPointEditTemplate = (point, destinations, isAddMode) => {
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
-      ${createTripPointEditHeaderTemplate(point, destinations)}
+      ${createTripPointEditHeaderTemplate(point, destinations, isAddMode)}
       ${createDetailTemplate(point)}
     </form>`
   );
 };
 
 export default class PointEdit extends AbstractSmartView {
-  constructor(point, destinations) {
+  constructor(point, destinations, isAddMode = false) {
     super();
     this._data = PointEdit.parsePointToData(point, destinations);
     this._destinations = destinations;
+    this._isAddMode = isAddMode;
     this._typeListElement = null;
     this._startDatePicker = null;
     this._endDatePicker = null;
@@ -66,7 +67,7 @@ export default class PointEdit extends AbstractSmartView {
   }
 
   getTemplate() {
-    return createPointEditTemplate(this._data, this._destinations);
+    return createPointEditTemplate(this._data, this._destinations, this._isAddMode);
   }
 
   reset(point) {

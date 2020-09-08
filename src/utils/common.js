@@ -28,20 +28,6 @@ export const getRandomArray = (arr, length = arr.length) => arr
 
 export const getRandomArrayValue = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-export const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
-  }
-
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1)
-  ];
-};
-
 export const extend = (a, ...b) => Object.assign({}, a, ...b);
 
 export const toFirstUpperCase = (word) => word[0].toUpperCase() + word.slice(1);

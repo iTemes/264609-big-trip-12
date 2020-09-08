@@ -5,11 +5,12 @@ import {
   createPriceTemplate,
   createSaveButtonTemplate,
   createCancelButtonTemplate,
+  createResetButtonTemplate,
   createFavoriteTemplate,
   createRollupButtonTemplate,
 } from './templates.js';
 
-export const createTripPointEditHeaderTemplate = (data, destinations) => {
+export const createTripPointEditHeaderTemplate = (data, destinations, isAddMode) => {
   const {
     type,
     destination,
@@ -31,6 +32,7 @@ export const createTripPointEditHeaderTemplate = (data, destinations) => {
       ${createPriceTemplate(price)}
       ${createSaveButtonTemplate(isError)}
       ${createCancelButtonTemplate()}
+      ${createResetButtonTemplate(isAddMode)}
       ${createFavoriteTemplate(isFavorite)}
       ${createRollupButtonTemplate()}
     </header>`

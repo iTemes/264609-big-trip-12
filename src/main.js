@@ -12,6 +12,7 @@ const POINTS_COUNT = 20;
 const points = generatePoints(POINTS_COUNT);
 
 const pointsModel = new PointsModel();
+pointsModel.setDestinations(DESTINATIONS);
 pointsModel.setPoints(points);
 
 const renderHeader = () => {
@@ -23,9 +24,9 @@ const renderHeader = () => {
   render(tripControls, new TripFiltersView(), RenderPosition.BEFOREEND);
 };
 
+renderHeader();
+
 const tripEvents = document.querySelector(`.trip-events`);
 const tripPresenter = new TripPresenter(tripEvents, pointsModel);
 
-renderHeader();
-
-tripPresenter.init(DESTINATIONS);
+tripPresenter.init();

@@ -7,7 +7,6 @@ import PointPresenter from "./point.js";
 import NoPointView from "../view/no-point.js";
 import PointsItemView from "../view/point-item.js";
 import {render, remove, RenderPosition, createRenderFragment} from "../utils/render.js";
-import {updateItem} from "../utils/common.js";
 import {sortUp, sortPrice} from "../utils/point.js";
 import {SortType} from "../const.js";
 import {formatDateISODdMmYyyyHhMm} from '../utils/date.js';
@@ -30,27 +29,28 @@ const groupPointsByDays = (points) => points
   .sort((pointA, pointB) => pointA.start - pointB.start)
   .reduce(reducePointByDay, {});
 
+const DEFAULT_SORT_TYPE = SortType.EVENT;
+
 export default class Trip {
   constructor(eventsContainer, pointsModel) {
     this._eventsContainer = eventsContainer;
     this._pointsModel = pointsModel;
-    this._currentSortType = SortType.EVENT;
+    this._currentSortType = DEFAULT_SORT_TYPE;
     this._pointPresenter = {};
     this._daysView = null;
     this._dayViews = [];
 
-    this._sortComponent = new SortView();
+    this._sortComponent = new SortView(DEFAULT_SORT_TYPE);
     this._noPointComponent = new NoPointView();
 
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handlePointChange = this._handlePointChange.bind(this);
     this._handleСhangeMode = this._handleСhangeMode.bind(this);
+    this._handleUpdateTrip = this._handleUpdateTrip.bind(this);
   }
 
-  init(destinations) {
-    this._destinations = destinations;
-
-    this._renderEvents();
+  init() {
+    this._renderTrip();
   }
 
   _getPoints() {
@@ -59,23 +59,20 @@ export default class Trip {
         return this._pointsModel.getTasks().slice().sort(sortUp);
       case SortType.PRICE:
         return this._pointsModel.getTasks().slice().sort(sortPrice);
+      default:
+        return this._pointsModel.getPoints();
     }
-
-    return this._pointsModel.getPoints();
   }
 
-  _handleСhangeMode() {
-    Object
-      .values(this._pointPresenter)
-      .forEach((presenter) => presenter.resetView());
-  }
-
-  _handlePointChange(updatedPoint) {
-    // Обновление модели здесь
-    this._pointPresenter[updatedPoint.id].init(updatedPoint, this._destinations);
+  _getDestinations() {
+    return this._pointsModel.getDestinations();
   }
 
   _handleSortTypeChange(sortType) {
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
     this._currentSortType = sortType;
     this._clearEvents();
     this._renderEvents();
@@ -92,31 +89,36 @@ export default class Trip {
     const pointPresenter = new PointPresenter(
         pointsItemView,
         this._handlePointChange,
-        this._handleСhangeMode
+        this._handleСhangeMode,
+        this._handleUpdateTrip
     );
-    pointPresenter.init(point, this._destinations);
+
+    pointPresenter.init(point, this._getDestinations());
     this._pointPresenter[point.id] = pointPresenter;
 
     return pointsItemView;
   }
 
-  _createEventDays() {
-    const days = groupPointsByDays(this._points);
+  _createEventDays(tripPoints) {
+    const days = groupPointsByDays(tripPoints);
+    console.log('GROUP DAYS-', days);
 
-    return Object.entries(days)
+    return  Object.entries(days)
     .map(([date, points], counter) => {
       return this._createEventDay(points, date, counter);
     });
   }
 
   _createEventDay(points, date, counter) {
+    console.log('create day-', points)
     const dayView = new TripDayView({
       dayCount: counter !== undefined ? counter + 1 : null,
-      isCountRender: this._points.length > 1 && counter !== undefined,
+      isCountRender: counter !== undefined,
       date: date !== undefined ? date : null,
     });
-
+    console.log('#########-', dayView);
     const pointsListView = new TripListView();
+    console.log('list view-', pointsListView);
     const pointsItemsViews = points.map((point) => this._createPointsItem(point));
 
     render(
@@ -135,24 +137,52 @@ export default class Trip {
     render(this._eventsContainer, this._noPointComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderEvents() {
-    if (!this._points.length) {
-      this._renderNoPoints();
-    } else {
-      this._renderSort();
-      this._daysView = this._daysView || new TripDaysView();
-      this._dayViews = this._currentSortType === SortType.EVENT
-        ? this._createEventDays()
-        : [this._createEventDay(this._points)];
+  _renderEvents(points) {
+    console.log('#', points);
+    this._renderSort();
+    this._daysView = this._daysView || new TripDaysView();
 
-      render(
-          this._daysView,
-          createRenderFragment(this._dayViews),
-          RenderPosition.BEFOREEND
-      );
+    console.log('day', this._daysView);
+    console.log('sort type', this._currentSortType  === SortType.EVENT );
+    this._dayViews = this._currentSortType === SortType.EVENT ? this._createEventDays(points) : [this._createEventDay(points)];
 
-      render(this._eventsContainer, this._daysView, RenderPosition.BEFOREEND);
+    console.log('days', this._dayViews);
+    render(
+        this._daysView,
+        createRenderFragment(this._dayViews),
+        RenderPosition.BEFOREEND
+    );
+
+    render(this._eventsContainer, this._daysView, RenderPosition.BEFOREEND);
+  }
+
+  _renderTrip() {
+    const points = this._getPoints();
+    console.log('#', points);
+    if (points.length > 0) {
+      this._renderEvents(points);
+      return;
     }
+
+    if (this._daysView) {
+      remove(this._daysView);
+    }
+
+    this._renderNoPoints();
+  }
+
+  _updateTrip() {
+    this._clearEvents();
+    this._renderTrip();
+  }
+
+  _handlePointChange(updatedPoint) {
+    // Обновление модели здесь
+    this._pointPresenter[updatedPoint.id].init(updatedPoint, this._getDestinations());
+  }
+
+  _handleUpdateTrip() {
+    this._updateTrip();
   }
 
   _clearEvents() {
@@ -163,5 +193,11 @@ export default class Trip {
 
     this._dayViews.forEach((dayView) => remove(dayView));
     this._dayViews = [];
+  }
+
+  _handleСhangeMode() {
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 }
