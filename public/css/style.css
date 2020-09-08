@@ -113,8 +113,9 @@ main {
 .page-header {
   padding-top: 23px;
   color: #ffffff;
-  background-color: #078ff0;
-  background-image: url("../img/header-bg.png");
+  /* background-color: #078ff0; */
+  background-color: #090a0a;
+  /* background-image: url("../img/header-bg.png"); */
   background-size: cover;
   background-repeat: no-repeat; }
   @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi), (min-resolution: 1.5dppx) {

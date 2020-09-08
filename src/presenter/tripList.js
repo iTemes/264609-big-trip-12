@@ -31,10 +31,9 @@ const groupPointsByDays = (points) => points
   .reduce(reducePointByDay, {});
 
 export default class Trip {
-  constructor(eventsContainer) {
+  constructor(eventsContainer, pointsModel) {
     this._eventsContainer = eventsContainer;
-    this._points = [];
-    this._destinations = [];
+    this._pointsModel = pointsModel;
     this._currentSortType = SortType.EVENT;
     this._pointPresenter = {};
     this._daysView = null;
@@ -48,38 +47,36 @@ export default class Trip {
     this._handleСhangeMode = this._handleСhangeMode.bind(this);
   }
 
-  init(points, destinations) {
-    // создаем копию данных
-    this._points = points.slice();
+  init(destinations) {
     this._destinations = destinations;
-    this._sourcedEventsList = this._points.slice();
 
     this._renderEvents();
   }
 
+  _getPoints() {
+    switch (this._currentSortType) {
+      case SortType.TIME:
+        return this._pointsModel.getTasks().slice().sort(sortUp);
+      case SortType.PRICE:
+        return this._pointsModel.getTasks().slice().sort(sortPrice);
+    }
+
+    return this._pointsModel.getPoints();
+  }
+
+  _handleСhangeMode() {
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
   _handlePointChange(updatedPoint) {
-    this._points = updateItem(this._points, updatedPoint);
-    this._sourcedEventsList = updateItem(this._sourcedEventsList, updatedPoint);
+    // Обновление модели здесь
     this._pointPresenter[updatedPoint.id].init(updatedPoint, this._destinations);
   }
 
-  _sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.DATE_UP:
-        this._points.sort(sortUp);
-        break;
-      case SortType.PRICE:
-        this._points.sort(sortPrice);
-        break;
-      default:
-        this._points = this._sourcedEventsList.slice();
-    }
-
-    this._currentSortType = sortType;
-  }
-
   _handleSortTypeChange(sortType) {
-    this._sortPoints(sortType);
+    this._currentSortType = sortType;
     this._clearEvents();
     this._renderEvents();
   }
@@ -166,11 +163,5 @@ export default class Trip {
 
     this._dayViews.forEach((dayView) => remove(dayView));
     this._dayViews = [];
-  }
-
-  _handleСhangeMode() {
-    Object
-      .values(this._pointPresenter)
-      .forEach((presenter) => presenter.resetView());
   }
 }
