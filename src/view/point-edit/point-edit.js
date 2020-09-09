@@ -11,6 +11,13 @@ import "../../../node_modules/flatpickr/dist/flatpickr.min.css";
 const checkDestinationOnError = (destinations, destination) => !destinations.includes(destination);
 const checkDatesOnError = (start, end) => (+start) > (+end);
 
+const destroyPointDatePicker = (picker) => {
+  if (picker) {
+    picker.destroy();
+    picker = null;
+  }
+};
+
 const createPointEditTemplate = (point, destinations, isAddMode) => {
   return (
     `<form class="trip-events__item  event  event--edit" action="#" method="post">
@@ -29,6 +36,7 @@ export default class PointEdit extends AbstractSmartView {
     this._typeListElement = null;
     this._startDatePicker = null;
     this._endDatePicker = null;
+    this.isStartDateUpdate = false;
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleResetForm = this._handleResetForm.bind(this);
@@ -103,13 +111,26 @@ export default class PointEdit extends AbstractSmartView {
     this._setInnerHandlers();
   }
 
+  _destroyPointDatePicker() {
+    destroyPointDatePicker(this._startDatePicker);
+    destroyPointDatePicker(this._endDatePicker);
+  }
+
   _handleFormSubmit(evt) {
     evt.preventDefault();
+    this._destroyPointDatePicker();
     this._callback.formSubmit(PointEdit.parseDataToPoint(this._data));
+  }
+
+  _handleResetForm(evt) {
+    evt.preventDefault();
+    this._destroyPointDatePicker();
+    this._callback.formReset();
   }
 
   _handleFormToEvent(evt) {
     evt.preventDefault();
+    this._destroyPointDatePicker();
     this._callback.formToEvent();
   }
 
@@ -162,33 +183,6 @@ export default class PointEdit extends AbstractSmartView {
     }, true);
   }
 
-  _handleStartDateChange([start]) {
-    const end = this._data.end;
-    const isDatesError = checkDatesOnError(start, end);
-    this.updateData({
-      start,
-      duration: diffDate(end, start),
-      isDatesError,
-    });
-  }
-
-
-  _handleEndDateChange([end]) {
-    const start = this._data.start;
-    const isDatesError = checkDatesOnError(start, end);
-    this.updateData({
-      end,
-      duration: diffDate(end, start),
-      isDatesError,
-    });
-  }
-
-  _handleResetForm(evt) {
-    evt.preventDefault();
-    this._callback.formReset();
-  }
-
-
   _setHandleOffersChange() {
     const offerElements = this.getElement().querySelectorAll(`.event__offer-checkbox`);
     offerElements.forEach((offerElement) => {
@@ -218,6 +212,16 @@ export default class PointEdit extends AbstractSmartView {
     );
   }
 
+  _handleStartDateChange([start]) {
+    const end = this._data.end;
+    const isDatesError = checkDatesOnError(start, end);
+    this.updateData({
+      start,
+      duration: diffDate(end, start),
+      isDatesError,
+    });
+  }
+
   _setEndDateChangeHandler(callback) {
 
     this._callback.endDateChange = callback;
@@ -234,9 +238,20 @@ export default class PointEdit extends AbstractSmartView {
           time_24hr: true,
           dateFormat: `d/m/y H:i`,
           defaultDate: this._data.end,
+          minDate: this._data.start,
           onChange: this._handleEndDateChange,
         }
     );
+  }
+
+  _handleEndDateChange([end]) {
+    const start = this._data.start;
+    const isDatesError = checkDatesOnError(start, end);
+    this.updateData({
+      end,
+      duration: diffDate(end, start),
+      isDatesError,
+    });
   }
 
   _setTypeInputChangeHandlers() {

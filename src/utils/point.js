@@ -45,25 +45,15 @@ const getWeightForNullDate = (dateA, dateB) => {
 };
 
 export const sortUp = (pointA, pointB) => {
-  const weight = getWeightForNullDate(pointA.dueDate.start, pointB.dueDate.start);
+  const weight = getWeightForNullDate(pointA.start, pointB.start);
 
   if (weight !== null) {
     return weight;
   }
-
-  return pointA.dueDate.start.getTime() - pointB.dueDate.start.getTime();
+  return pointB.duration - pointA.duration;
 };
 
 export const sortPrice = (pointA, pointB) => {
-  return pointA.price - pointB.price;
+  return pointB.price - pointA.price;
 };
 
-export const sortDown = (pointA, pointB) => {
-  const weight = getWeightForNullDate(pointA.dueDate.start, pointB.dueDate.start);
-
-  if (weight !== null) {
-    return weight;
-  }
-
-  return pointB.dueDate.start.getTime() - pointA.dueDate.start.getTime();
-};

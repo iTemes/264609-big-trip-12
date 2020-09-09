@@ -31,7 +31,6 @@ export const createTripPointEditHeaderTemplate = (data, destinations, isAddMode)
       ${createTimeTemplate({start, end})}
       ${createPriceTemplate(price)}
       ${createSaveButtonTemplate(isError)}
-      ${createCancelButtonTemplate()}
       ${createResetButtonTemplate(isAddMode)}
       ${createFavoriteTemplate(isFavorite)}
       ${createRollupButtonTemplate()}

@@ -1,6 +1,7 @@
 import PointEditView from "../view/point-edit/point-edit.js";
 import PointView from "../view/point/point.js";
 import {render, replace, remove, RenderPosition} from "../utils/render.js";
+import {UserAction, UpdateType} from "../const.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -8,11 +9,11 @@ const Mode = {
 };
 
 export default class Point {
-  constructor(pointListContainer, changePoint, changeMode, updateTrip) {
+  constructor(pointListContainer, changePoint, changeMode, changeData) {
     this._pointListContainer = pointListContainer;
     this._changePoint = changePoint;
     this._changeMode = changeMode;
-    this._updateTrip = updateTrip;
+    this._changeData = changeData;
     this._destinations = null;
     this._pointComponent = null;
     this._pointEditComponent = null;
@@ -99,7 +100,22 @@ export default class Point {
   }
 
   _handleFormSubmit(point) {
+    this._isShouldUpdateTrip = this._pointEditComponent.isStartDateUpdate;
     this._changePoint(point);
+
+    if (this._isShouldUpdateTrip) {
+      this._updateTrip();
+    }
+    // const updateType = this._pointEditComponent.isStartDateUpdate
+    //   ? UpdateType.MINOR
+    //   : UpdateType.PATCH;
+
+    // this._changeData(
+    //     UserAction.UPDATE_POINT,
+    //     updateType,
+    //     point
+    // );
+
     this._replaceFormToPoint();
   }
 
