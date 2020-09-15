@@ -7,8 +7,8 @@ export const MINUTE = 60 * 1000;
 export const HOUR = 60 * MINUTE;
 export const DAY = 24 * HOUR;
 
-const TRANSFERS = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
-const ACTVITIES = [`Check-in`, `Sightseeing`, `Restaurant`];
+export const TRANSFERS = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
+export const ACTVITIES = [`Check-in`, `Sightseeing`, `Restaurant`];
 
 const PointGroupType = {
   TRANSFER: `Transfer`,
@@ -39,9 +39,25 @@ export const pointTypeToPreposition = {
 };
 
 export const SortType = {
-  EVENT: `event`,
-  TIME: `time`,
-  PRICE: `price`,
-  DATE_DOWN: `date-down`,
-  DATE_UP: `date-up`
+  EVENT: `Event`,
+  TIME: `Time`,
+  PRICE: `Price`,
+};
+
+export const UserAction = {
+  UPDATE_POINT: `UPDATE_POINT`,
+  ADD_POINT: `ADD_POINT`,
+  DELETE_POINT: `DELETE_POINT`
+};
+
+export const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+
+export const FilterType = {
+  EVERYTHING: `Everything`,
+  FUTURE: `Future`,
+  PAST: `Past`,
 };

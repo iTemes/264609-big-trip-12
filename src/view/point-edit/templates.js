@@ -1,6 +1,6 @@
-import {pointGroupToTypes} from '../../const';
-import {formatDateYyyyMmDdHhMmWithDash} from '../../utils/date';
-import {getPointTypeWithPreposition} from '../../utils/type-preposition';
+import {pointGroupToTypes} from '../../const.js';
+import {formatDateYyyyMmDdHhMmWithDash} from '../../utils/date.js';
+import {getPointTypeWithPreposition} from '../../utils/type-preposition.js';
 
 const FAVORITE_ICON = (
   `<svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
@@ -71,7 +71,7 @@ export const createTypeListTemplate = (currentType) => {
   );
 };
 
-export const createDestinationTemplate = (currentType, destination, destinations) => {
+export const createHeaderDestinationTemplate = (currentType, destination, destinations) => {
 
   return (
     `<div class="event__field-group  event__field-group--destination">
@@ -157,6 +157,14 @@ export const createCancelButtonTemplate = () => {
   return (
     `<button class="event__reset-btn" type="reset">
       Cancel
+    </button>`
+  );
+};
+
+export const createResetButtonTemplate = (isAddMode) => {
+  return (
+    `<button class="event__reset-btn" type="reset">
+      ${isAddMode ? `Cancel` : `Delete`}
     </button>`
   );
 };

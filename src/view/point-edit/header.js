@@ -1,15 +1,15 @@
 import {
   createTypeListTemplate,
-  createDestinationTemplate,
+  createHeaderDestinationTemplate,
   createTimeTemplate,
   createPriceTemplate,
   createSaveButtonTemplate,
-  createCancelButtonTemplate,
+  createResetButtonTemplate,
   createFavoriteTemplate,
   createRollupButtonTemplate,
 } from './templates.js';
 
-export const createTripPointEditHeaderTemplate = (data, destinations) => {
+export const createTripPointEditHeaderTemplate = (data, destinations, isAddMode) => {
   const {
     type,
     destination,
@@ -26,13 +26,14 @@ export const createTripPointEditHeaderTemplate = (data, destinations) => {
   return (
     `<header class="event__header">
       ${createTypeListTemplate(type)}
-      ${createDestinationTemplate(type, destination, destinations)}
+      ${createHeaderDestinationTemplate(type, destination, destinations)}
       ${createTimeTemplate({start, end})}
       ${createPriceTemplate(price)}
       ${createSaveButtonTemplate(isError)}
-      ${createCancelButtonTemplate()}
-      ${createFavoriteTemplate(isFavorite)}
-      ${createRollupButtonTemplate()}
+      ${createResetButtonTemplate(isAddMode)}
+
+      ${isAddMode ? `` : createFavoriteTemplate(isFavorite)}
+      ${isAddMode ? `` : createRollupButtonTemplate()}
     </header>`
   );
 };
