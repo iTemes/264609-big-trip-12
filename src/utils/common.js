@@ -57,3 +57,5 @@ export const getRandomDate = ({date = new Date(), minute = 59, hour = 24, day = 
     )
   );
 };
+
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);

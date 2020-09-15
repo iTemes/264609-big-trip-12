@@ -1,10 +1,14 @@
-import TripInfoView from "./view/tripInfo.js";
+
 import TripTabsVew from "./view/tripTabs.js";
-import TripFiltersView from "./view/tripFilters.js";
+import ControlsView from "./view/controls.js";
+import NewPointButtonView from "./view/new-point-button.js";
 
 import {generatePoints, DESTINATIONS} from "./mock/point.js";
 import TripPresenter from "./presenter/tripList.js";
-import PointsModel from './model/points.js';
+import FilterPresenter from "./presenter/filter.js";
+import InfoPresenter from "./presenter/info.js";
+import PointsModel from "./model/points.js";
+import FilterModel from "./model/filter.js";
 import {render, RenderPosition} from "./utils/render.js";
 
 
@@ -15,18 +19,36 @@ const pointsModel = new PointsModel();
 pointsModel.setDestinations(DESTINATIONS);
 pointsModel.setPoints(points);
 
-const renderHeader = () => {
-  const tripMainContainer = document.querySelector(`.trip-main`);
-  const tripControls = tripMainContainer.querySelector(`.trip-controls`);
+const filterModel = new FilterModel();
 
-  render(tripMainContainer, new TripInfoView(), RenderPosition.AFTERBEGIN);
-  render(tripControls, new TripTabsVew(), RenderPosition.BEFOREEND);
-  render(tripControls, new TripFiltersView(), RenderPosition.BEFOREEND);
-};
+const tripMainContainer = document.querySelector(`.trip-main`);
 
-renderHeader();
+const controlsView = new ControlsView();
+render(tripMainContainer, controlsView, RenderPosition.AFTERBEGIN);
+
+const newPointButton = new NewPointButtonView();
+render(tripMainContainer, newPointButton, RenderPosition.BEFOREEND);
+
+const tabsView = new TripTabsVew();
+render(controlsView, tabsView, RenderPosition.AFTERBEGIN);
+
 
 const tripEvents = document.querySelector(`.trip-events`);
-const tripPresenter = new TripPresenter(tripEvents, pointsModel);
 
+const tripPresenter = new TripPresenter(tripEvents, pointsModel, filterModel);
 tripPresenter.init();
+
+const filterPresenter = new FilterPresenter(controlsView, pointsModel, filterModel);
+filterPresenter.init();
+
+const infoPresenter = new InfoPresenter(tripMainContainer, pointsModel, filterModel);
+infoPresenter.init();
+
+const newPointButtonElement = newPointButton.getElement();
+newPointButtonElement.addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  newPointButtonElement.disabled = true;
+  tripPresenter.createPoint(() => {
+    newPointButtonElement.disabled = false;
+  });
+});

@@ -63,4 +63,4 @@ export default class Points extends Observer {
 
     this._notify(updateType);
   }
-};
+}

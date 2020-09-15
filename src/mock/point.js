@@ -118,7 +118,12 @@ const generateDescription = () => {
 };
 
 const generatePoint = () => {
-  const dateStart = new Date(getRandomDate(moveDateConfig));
+  const dateStart = new Date(getRandomDate(
+      moveDateConfig,
+      {
+        move: getRandomBool() ? MoveDate.PAST : MoveDate.FUTURE,
+      }
+  ));
   const dateEnd = new Date(getRandomDate(extend(
       moveDateConfig,
       {
