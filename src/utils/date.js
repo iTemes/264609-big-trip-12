@@ -19,10 +19,11 @@ export const formatDateMmmDd = (date) => isDate(date) ? moment(date).format(`MMM
 export const diffDate = (date1, date2) => ((+date1) - (+date2));
 
 export const convertMsToDHM = (ms) => {
-  const day = Math.floor(ms / DAY);
-  const hour = Math.floor((ms - day * DAY) / HOUR);
-  const minute = Math.floor((ms - day * DAY - hour * HOUR) / MINUTE);
-  return {day, hour, minute};
+  const days = Math.floor(ms / DAY);
+  const hours = Math.floor((ms - days * DAY) / HOUR);
+  const minutes = Math.floor((ms - days * DAY - hours * HOUR) / MINUTE);
+
+  return {days, hours, minutes};
 };
 
 export const isDateAfter = (date1, date2) => {

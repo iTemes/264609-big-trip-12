@@ -4,6 +4,8 @@ import {
   DAY,
 } from '../const.js';
 
+import {convertNumberOfDate, convertMsToDHM} from './date.js';
+
 export const MoveDate = {
   PAST: `past`,
   FUTURE: `future`,
@@ -59,3 +61,14 @@ export const getRandomDate = ({date = new Date(), minute = 59, hour = 24, day = 
 };
 
 export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
+export const convertDurationValue = (duration) => {
+  const formateDuration = convertMsToDHM(duration);
+  const {days, hours, minutes} = formateDuration;
+
+  if (days > 0) {
+    return `${convertNumberOfDate(days)}D ${convertNumberOfDate(hours)}H ${convertNumberOfDate(minutes)}M`;
+  }
+
+  return `${hours > 0 ? `${convertNumberOfDate(hours)}H` : ``} ${convertNumberOfDate(minutes)}M`;
+};

@@ -59,7 +59,17 @@ export default class Trip {
   }
 
   init() {
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderTrip();
+  }
+
+  destroy() {
+    this._clearTrip({isResetSortType: true});
+
+    this._pointsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   createPoint(callback) {
@@ -229,13 +239,17 @@ export default class Trip {
     this._renderNoPoints();
   }
 
-  _updateTrip({isResetSortType} = {isResetSortType: false}) {
+  _clearTrip({isResetSortType} = {isResetSortType: false}) {
     if (isResetSortType) {
       this._resetSortType();
     }
 
     this._pointNewPresenter.destroy();
     this._clearEvents();
+  }
+
+  _updateTrip({isResetSortType} = {isResetSortType: false}) {
+    this._clearTrip({isResetSortType});
     this._renderTrip();
   }
 
