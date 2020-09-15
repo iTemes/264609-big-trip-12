@@ -10,9 +10,22 @@ export const DAY = 24 * HOUR;
 export const TRANSFERS = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
 export const ACTVITIES = [`Check-in`, `Sightseeing`, `Restaurant`];
 
-const PointGroupType = {
+export const PointGroupType = {
   TRANSFER: `Transfer`,
   ACTVITY: `Activity`,
+};
+
+export const pointTypeEmoji = {
+  'Taxi': `🚕`,
+  'Bus': `🚌`,
+  'Train': `🚂`,
+  'Ship': `🛳`,
+  'Transport': `🚊`,
+  'Drive': `🚗`,
+  'Flight': `✈️`,
+  'Check-in': `🏨`,
+  'Sightseeing': `🏛`,
+  'Restaurant': `🍴`,
 };
 
 export const pointGroupToTypes = {
@@ -65,4 +78,4 @@ export const FilterType = {
 export const TabNames = {
   TABLE: `Table`,
   STATS: `Stats`,
-}
+};

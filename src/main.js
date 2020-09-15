@@ -2,7 +2,7 @@
 import TripTabsVew from "./view/tripTabs.js";
 import ControlsView from "./view/controls.js";
 import NewPointButtonView from "./view/new-point-button.js";
-import StatisticView from "./view/statistics/statistics.js";
+import StatisticsView from "./view/statistics/statistics.js";
 
 import TripPresenter from "./presenter/tripList.js";
 import FilterPresenter from "./presenter/filter.js";
@@ -11,7 +11,8 @@ import InfoPresenter from "./presenter/info.js";
 import PointsModel from "./model/points.js";
 import FilterModel from "./model/filter.js";
 
-import {render, RenderPosition} from "./utils/render.js";
+import {TabNames} from './const';
+import {render, remove, RenderPosition} from "./utils/render.js";
 import {generatePoints, DESTINATIONS} from "./mock/point.js";
 
 
@@ -39,7 +40,7 @@ const pageContainerElement = document.querySelector(`.page-main`).querySelector(
 const tripEvents = pageContainerElement.querySelector(`.trip-events`);
 
 const tripPresenter = new TripPresenter(tripEvents, pointsModel, filterModel);
-tripPresenter.init();
+// tripPresenter.init();
 
 const filterPresenter = new FilterPresenter(controlsView, pointsModel, filterModel);
 filterPresenter.init();
@@ -47,8 +48,8 @@ filterPresenter.init();
 const infoPresenter = new InfoPresenter(tripMainContainer, pointsModel, filterModel);
 infoPresenter.init();
 
-const statisticView = new StatisticView();
-render(pageContainerElement, statisticView, RenderPosition.BEFOREEND);
+// const statisticView = new StatisticView(pointsModel.getPoints());
+// render(pageContainerElement, statisticView, RenderPosition.BEFOREEND);
 
 const newPointButtonElement = newPointButton.getElement();
 newPointButtonElement.addEventListener(`click`, (evt) => {
@@ -58,3 +59,23 @@ newPointButtonElement.addEventListener(`click`, (evt) => {
     newPointButtonElement.disabled = false;
   });
 });
+
+let statisticsView = null;
+
+const handleTabsClick = (activeTab) => {
+  switch (activeTab) {
+    case TabNames.TABLE:
+      tripPresenter.init();
+      remove(statisticsView);
+      break;
+    case TabNames.STATS:
+      tripPresenter.destroy();
+      statisticsView = new StatisticsView(pointsModel.getPoints());
+      render(pageContainerElement, statisticsView, RenderPosition.BEFOREEND);
+      break;
+  }
+};
+
+tabsView.setTabsClickHandler(handleTabsClick);
+
+tripPresenter.init();
