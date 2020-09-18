@@ -15,9 +15,20 @@ import {TabNames} from './const';
 import {render, remove, RenderPosition} from "./utils/render.js";
 import {generatePoints, DESTINATIONS} from "./mock/point.js";
 
+import Api from "./api";
 
 const POINTS_COUNT = 20;
+const AUTHORIZATION = `Basic pkghtu7yh42kgdf67`;
+const END_POINT = `https://12.ecmascript.pages.academy/big-trip`;
+
 const points = generatePoints(POINTS_COUNT);
+const api = new Api(END_POINT, AUTHORIZATION);
+console.log('#',points);
+api.getPoints().then((points) => {
+  console.log(points);
+
+
+});
 
 const pointsModel = new PointsModel();
 pointsModel.setDestinations(DESTINATIONS);
